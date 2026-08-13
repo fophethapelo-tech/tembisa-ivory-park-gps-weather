@@ -1,6 +1,10 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#087fbd"><meta name="description" content="Tembisa & Ivory Park GPS Weather">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087fbd">
+<meta name="description" content="Tembisa & Ivory Park GPS Weather, maps, driver route weather and nearby places">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
 <title>Tembisa & Ivory Park GPS Weather</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -16,16 +20,21 @@ button{background:#087fbd;color:#fff;border:0;font-weight:bold;cursor:pointer}bu
 .ok{border-left:5px solid #14845b}.warn{border-left:5px solid #b26b00}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stat{padding:14px;background:#f5fbfe;border-radius:13px}.stat b{display:block;font-size:22px;margin-top:5px}
 #map{height:390px;border-radius:14px;margin-top:12px}.small{font-size:13px;color:#607587}.hidden{display:none}
-footer{text-align:center;color:#607587;padding:24px;font-size:13px}@media(max-width:700px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.row{flex-direction:column}h1{font-size:23px}}
-</style></head><body>
-<header><h1>🌦️ Tembisa & Ivory Park GPS Weather</h1><p>Local weather • GPS • maps • driver route weather</p></header>
+.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.category-grid button{padding:11px}.place{padding:12px;border:1px solid #dce8ee;border-radius:12px;margin-top:8px;background:#f9fcfd}
+.place b{display:block;margin-bottom:5px}.place a{display:inline-block;margin-top:7px;padding:8px 10px;background:#e7f5fb;border-radius:8px;color:#075b85;text-decoration:none;font-weight:bold}
+footer{text-align:center;color:#607587;padding:24px;font-size:13px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.row{flex-direction:column}h1{font-size:23px}.category-grid{grid-template-columns:1fr 1fr}}
+</style></head>
+<body>
+<header><h1>🌦️ Tembisa & Ivory Park GPS Weather</h1><p>Local weather • GPS • maps • nearby places • driver route weather</p></header>
 <main class="wrap">
 <section class="card"><h2>📍 My GPS</h2><div id="gpsStatus" class="status">GPS has not been started.</div>
-<div class="row"><button id="gpsBtn">📍 Use My GPS Location</button><button id="settingsBtn" class="light">⚙️ Location Settings</button></div>
-<p class="small">Allow location permission in Chrome and make sure Location is ON on the phone.</p></section>
+<div class="row"><button id="gpsBtn">📍 Use My GPS Location</button><button id="settingsBtn" class="light">⚙️ Open Location Settings</button></div>
+<p class="small">Allow location permission in Chrome. On Android, Location must also be ON.</p></section>
 
 <section class="card"><h2>🏘️ Local area weather</h2><div class="grid">
-<div><label>Area</label><select id="municipality"><option>Tembisa</option><option>Ivory Park</option><option>Surrounding</option></select></div>
+<div><label>Area</label><select id="municipality"></select></div>
 <div><label>Section / extension</label><select id="section"></select></div></div>
 <button id="areaBtn" style="margin-top:12px">🌦️ Get Area Weather</button><div id="areaStatus" class="status">Choose an area and section.</div></section>
 
@@ -36,13 +45,22 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}@media(max-wi
 
 <section class="card"><h2>🚕 Driver Mode</h2><div class="grid">
 <div><label>Vehicle / trip type</label><select id="driverMode"><option>Taxi</option><option>Personal Car</option><option>Delivery</option><option>Bolt</option></select></div>
-<div><label>Destination</label><input id="destination" placeholder="e.g. Tembisa Mall or a school"></div></div>
+<div><label>Destination</label><input id="destination" placeholder="e.g. school, church, clinic or area"></div></div>
 <div class="row"><button id="startRoute">🚕 Start Route Weather</button><button id="stopRoute" class="alt" disabled>⏹️ Stop Monitoring</button></div>
 <div id="routeStatus" class="status">Choose a destination to monitor your route.</div><div id="map"></div></section>
 
-<section class="card"><h2>🏫 Nearby places</h2><p>Search for schools, churches, clinics and other places around your GPS position.</p>
-<div class="row"><input id="placeSearch" placeholder="schools, churches, clinic..."><button id="nearbyBtn">🔎 Find Nearby Places</button></div>
-<div id="nearbyStatus" class="status">Start GPS first.</div></section>
+<section class="card"><h2>🏫 Nearby places</h2><p>Find real nearby schools, churches, clinics, police, petrol stations, shops, ATMs and transport stops.</p>
+<div class="category-grid">
+<button data-cat="school">🏫 Schools</button><button data-cat="place_of_worship">⛪ Churches</button>
+<button data-cat="clinic">🏥 Clinics</button><button data-cat="police">👮 Police</button>
+<button data-cat="fuel">⛽ Petrol</button><button data-cat="shop">🛒 Shops</button>
+<button data-cat="atm">🏧 ATMs</button><button data-cat="bus_stop">🚌 Transport</button>
+</div>
+<div class="row"><input id="placeSearch" placeholder="Or type a place/category"><button id="nearbyBtn">🔎 Find Nearby</button></div>
+<div id="nearbyStatus" class="status">Start GPS first.</div><div id="places"></div></section>
+
+<section class="card"><h2>🗺️ Open location in Maps</h2><div class="row">
+<button id="mapsBtn">📍 Google Maps</button><button id="osmBtn" class="light">🗺️ OpenStreetMap</button></div></section>
 
 <section class="card"><h2>📱 Install on your phone</h2><p>If Chrome shows <b>Install</b> or <b>Add to Home screen</b>, use it to install this web app.</p>
 <button id="installBtn" class="light hidden">📲 Install App</button></section>
@@ -50,33 +68,62 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}@media(max-wi
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const areas={
-"Tembisa":["Diffateng","Ecaleni","Ehlanzeni / Enhlanzeni","Elidinga","Eliliba / Liliba","Emangeni","Emfihlweni","Emkhathini","Endulwini","Entshonalanga","Esangweni","Esiphetweni / Isiphetweni","Esiziba / Isiziba","Ethafeni","Hospital Garden / Hospital View","Ibaxa","Jiyane","Khalambazo","Kopanong","Leboeng","Lekaneng","Makhulong","Maokeng / Moakeng","Mashimong","Moedi","Moriting / Meriting","Moteong","Motsu","Mqantsa","Mthambeka / Umthambeka","Phomolong","Sedibeng","Sethokga","Teanong","Temong","Tlamatlama","Tsenelong","Tshepo / Tsepo","Umnonjaneni","Xubeni"],
+"Tembisa":["Difateng","Ecaleni","Ehlanzeni / Enhlanzeni","Elidinga","Eliliba / Liliba","Emangeni","Emfihlweni","Emkhathini","Endulwini","Entshonalanga","Esangweni","Esiphetweni / Isiphetweni","Esiziba / Isiziba","Ethafeni","Hospital Garden / Hospital View","Ibaxa","Jiyane","Khalambazo","Kopanong","Leboeng","Lekaneng","Makhulong","Maokeng / Moakeng","Mashimong","Moedi","Moriting / Meriting","Moteong","Motsu","Mqantsa","Mthambeka / Umthambeka","Phomolong","Sedibeng","Sethokga","Teanong","Temong","Tlamatlama","Tsenelong","Tshepo / Tsepo","Umnonjaneni","Xubeni"],
 "Ivory Park":["Extension 2","Extension 6","Extension 7","Extension 8","Extension 8 - Clinic","Extension 9","Extension 10","Extension 11","Extension 12","Extension 13","Extension 14","Extension 15","Rebonwe Primary School area","Dali Mpofu area","Ivory Park Central"],
 "Surrounding":["Ebony Park","Ebony Park Extension 6","Ebony Park Extension 9","Rabie Ridge","Clayville","Kaalfontein","Kanana","Mayibuye","Esselen Park","Tswelopele","Vusimuzi","Winnie Mandela Park"]};
+
 const muni=document.getElementById("municipality"),sec=document.getElementById("section");
+Object.keys(areas).forEach(x=>{let o=document.createElement("option");o.textContent=x;o.value=x;muni.appendChild(o)});
 function fill(){sec.innerHTML="";areas[muni.value].forEach(x=>{let o=document.createElement("option");o.textContent=x;o.value=x;sec.appendChild(o)})}
 muni.onchange=fill;fill();
-let pos=null,marker=null,circle=null,watch=null,line=null,destMarker=null;
+
+let pos=null,marker=null,circle=null,watch=null,line=null,destMarker=null,placeMarkers=[];
 const map=L.map("map").setView([-25.998,28.226],11);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"}).addTo(map);
+
 function setPos(p){pos={lat:p.coords.latitude,lon:p.coords.longitude,accuracy:p.coords.accuracy};let ll=[pos.lat,pos.lon];
 if(!marker)marker=L.marker(ll).addTo(map).bindPopup("📍 My GPS location");else marker.setLatLng(ll);
 if(!circle)circle=L.circle(ll,{radius:Math.min(pos.accuracy||100,5000)}).addTo(map);else{circle.setLatLng(ll);circle.setRadius(Math.min(pos.accuracy||100,5000))}
-map.setView(ll,14);document.getElementById("gpsStatus").className="status ok";document.getElementById("gpsStatus").innerHTML="<b>GPS active.</b> Accuracy: "+Math.round(pos.accuracy)+" m<br>"+pos.lat.toFixed(5)+", "+pos.lon.toFixed(5);weather(pos.lat,pos.lon)}
-function gpsErr(){document.getElementById("gpsStatus").className="status warn";document.getElementById("gpsStatus").textContent="GPS could not be read. Allow location permission in Chrome and make sure Location is ON."}
+map.setView(ll,14);gpsStatus.className="status ok";gpsStatus.innerHTML="<b>GPS active.</b> Accuracy: "+Math.round(pos.accuracy)+" m<br>"+pos.lat.toFixed(5)+", "+pos.lon.toFixed(5);weather(pos.lat,pos.lon)}
+function gpsErr(){gpsStatus.className="status warn";gpsStatus.textContent="GPS could not be read. Allow location permission in Chrome and make sure Location is ON."}
 function gps(){if(!navigator.geolocation)return gpsErr();navigator.geolocation.getCurrentPosition(setPos,gpsErr,{enableHighAccuracy:true,timeout:15000,maximumAge:5000})}
-document.getElementById("gpsBtn").onclick=gps;
-document.getElementById("settingsBtn").onclick=()=>alert("Open Chrome Settings → Privacy and security → Site settings → Location, then allow this site. Also turn ON Location in the phone settings.");
+gpsBtn.onclick=gps;
+
+settingsBtn.onclick=()=>{try{if(/Android/i.test(navigator.userAgent)){location.href="intent://settings/location#Intent;scheme=android-app;package=com.android.settings;end";return}}catch(e){}alert("If Settings did not open: Android Settings → Location → turn Location ON. Then return to Chrome and allow this site to use your location.")};
+
 async function weather(lat,lon){try{let u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,wind_speed_10m&timezone=Africa%2FJohannesburg`;let d=await fetch(u).then(r=>r.json()),c=d.current;
-temp.textContent=Math.round(c.temperature_2m)+"°C";wind.textContent=Math.round(c.wind_speed_10m)+" km/h";humidity.textContent=Math.round(c.relative_humidity_2m)+"%";rain.textContent=(c.rain||0)+" mm"}catch(e){}}
-async function geo(q){let u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=za&q="+encodeURIComponent(q+", Gauteng, South Africa");let a=await fetch(u).then(r=>r.json());return a[0]?{lat:+a[0].lat,lon:+a[0].lon}:null}
-areaBtn.onclick=async()=>{areaStatus.textContent="Finding area…";let g=await geo(sec.value+" "+muni.value);if(!g){areaStatus.textContent="Area could not be located automatically.";return}areaStatus.className="status ok";areaStatus.textContent="Showing weather for "+sec.value;if(destMarker)destMarker.setLatLng([g.lat,g.lon]);else destMarker=L.marker([g.lat,g.lon]).addTo(map);map.setView([g.lat,g.lon],14);weather(g.lat,g.lon)};
-startRoute.onclick=async()=>{if(!pos){gps();routeStatus.textContent="Starting GPS. Press Start Route Weather again after GPS activates.";return}let q=destination.value.trim();if(!q){routeStatus.textContent="Enter a destination first.";return}routeStatus.textContent="Finding destination…";let g=await geo(q);if(!g){routeStatus.textContent="Destination not found. Try a landmark, school, church, clinic or area name.";return}
+temp.textContent=Math.round(c.temperature_2m)+"°C";wind.textContent=Math.round(c.wind_speed_10m)+" km/h";humidity.textContent=Math.round(c.relative_humidity_2m)+"%";rain.textContent=(c.rain||0)+" mm"}catch(e){}}</script>
+<script>
+async function geo(q){try{let u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=za&q="+encodeURIComponent(q+", Gauteng, South Africa");let a=await fetch(u).then(r=>r.json());return a[0]?{lat:+a[0].lat,lon:+a[0].lon}:null}catch(e){return null}}
+areaBtn.onclick=async()=>{areaStatus.textContent="Finding area…";let g=await geo(sec.value+" "+muni.value);if(!g){areaStatus.textContent="Area could not be located automatically. Try GPS.";return}areaStatus.className="status ok";areaStatus.textContent="Showing weather for "+sec.value;if(destMarker)destMarker.setLatLng([g.lat,g.lon]);else destMarker=L.marker([g.lat,g.lon]).addTo(map);map.setView([g.lat,g.lon],14);weather(g.lat,g.lon)};
+
+startRoute.onclick=async()=>{if(!pos){gps();routeStatus.textContent="Starting GPS. Press Start Route Weather again after GPS activates.";return}let q=destination.value.trim();if(!q){routeStatus.textContent="Enter a destination first.";return}
+routeStatus.textContent="Finding destination…";let g=await geo(q);if(!g){routeStatus.textContent="Destination not found. Try a school, church, clinic or area.";return}
 if(destMarker)destMarker.remove();destMarker=L.marker([g.lat,g.lon]).addTo(map).bindPopup("🏁 "+q).openPopup();if(line)line.remove();line=L.polyline([[pos.lat,pos.lon],[g.lat,g.lon]],{weight:6}).addTo(map);map.fitBounds(line.getBounds(),{padding:[30,30]});
-routeStatus.className="status ok";routeStatus.innerHTML="<b>"+driverMode.value+" mode active.</b> Vehicle position is updating on the map.<br>Destination: "+q;startRoute.disabled=true;stopRoute.disabled=false;
-if(watch)navigator.geolocation.clearWatch(watch);watch=navigator.geolocation.watchPosition(p=>{setPos(p);if(line)line.setLatLngs([[p.coords.latitude,p.coords.longitude],[g.lat,g.lon]])},gpsErr,{enableHighAccuracy:true,maximumAge:3000,timeout:15000})};
+routeStatus.className="status ok";routeStatus.innerHTML="<b>"+driverMode.value+" mode active.</b> Your vehicle GPS position updates on the map.<br>Destination: "+q;
+startRoute.disabled=true;stopRoute.disabled=false;if(watch)navigator.geolocation.clearWatch(watch);
+watch=navigator.geolocation.watchPosition(p=>{setPos(p);if(line)line.setLatLngs([[p.coords.latitude,p.coords.longitude],[g.lat,g.lon]])},gpsErr,{enableHighAccuracy:true,maximumAge:3000,timeout:15000})};
 stopRoute.onclick=()=>{if(watch)navigator.geolocation.clearWatch(watch);watch=null;startRoute.disabled=false;stopRoute.disabled=true;routeStatus.className="status";routeStatus.textContent="Route monitoring stopped."};
-nearbyBtn.onclick=()=>{if(!pos){nearbyStatus.textContent="Start GPS first.";return}let q=placeSearch.value.trim()||"schools";let u=`https://www.openstreetmap.org/?mlat=${pos.lat}&mlon=${pos.lon}#map=14/${pos.lat}/${pos.lon}`;nearbyStatus.innerHTML="Map opened for <b>"+q+"</b> around your GPS position.";window.open(u,"_blank")};
+
+function clearPlaces(){placeMarkers.forEach(m=>m.remove());placeMarkers=[]}
+function distanceKm(a,b,c,d){const R=6371,rad=x=>x*Math.PI/180,x=rad(c-a),y=rad(d-b),h=Math.sin(x/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+async function nearby(cat){
+if(!pos){nearbyStatus.textContent="Start GPS first.";return}
+nearbyStatus.textContent="Searching within about 5 km…";places.innerHTML="";clearPlaces();
+let tag={"school":'["amenity"="school"]',"place_of_worship":'["amenity"="place_of_worship"]',"clinic":'["amenity"="clinic"]',"police":'["amenity"="police"]',"fuel":'["amenity"="fuel"]',"shop":'["shop"]',"atm":'["amenity"="atm"]',"bus_stop":'["highway"="bus_stop"]'}[cat]||'["name"]';
+let q=`[out:json][timeout:25];(node(around:5000,${pos.lat},${pos.lon})${tag};way(around:5000,${pos.lat},${pos.lon})${tag};);out center tags;`;
+try{let data=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:q}).then(r=>r.json());let items=(data.elements||[]).filter(e=>e.tags&&e.tags.name).slice(0,30);
+if(!items.length){nearbyStatus.textContent="No named places found nearby. Try another category.";return}
+nearbyStatus.className="status ok";nearbyStatus.textContent="Found "+items.length+" nearby places.";
+items.forEach((e,i)=>{let lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon;if(lat==null||lon==null)return;let name=e.tags.name,address=e.tags["addr:street"]||e.tags["addr:suburb"]||"",dist=Math.round(distanceKm(pos.lat,pos.lon,lat,lon)*10)/10;
+let div=document.createElement("div");div.className="place";div.innerHTML=`<b>${i+1}. ${esc(name)}</b><span class="small">${esc(address)} • about ${dist} km away</span><br><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name+" "+address)}">📍 Open in Google Maps</a>`;places.appendChild(div);
+placeMarkers.push(L.marker([lat,lon]).addTo(map).bindPopup("<b>"+esc(name)+"</b><br>"+dist+" km away"))});map.setView([pos.lat,pos.lon],13)}
+catch(e){nearbyStatus.className="status warn";nearbyStatus.textContent="Nearby search is temporarily unavailable. Try again."}}
+document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>nearby(b.dataset.cat));
+nearbyBtn.onclick=()=>{let q=placeSearch.value.trim().toLowerCase(),k={school:"school",schools:"school",church:"place_of_worship",churches:"place_of_worship",clinic:"clinic",clinics:"clinic",police:"police",petrol:"fuel",fuel:"fuel",shop:"shop",shops:"shop",atm:"atm","bus stop":"bus_stop"};nearby(k[q]||"name")};
+mapsBtn.onclick=()=>{if(!pos){gps();return}window.open(`https://www.google.com/maps/@${pos.lat},${pos.lon},15z`,"_blank")};
+osmBtn.onclick=()=>{if(!pos){gps();return}window.open(`https://www.openstreetmap.org/?mlat=${pos.lat}&mlon=${pos.lon}#map=15/${pos.lat}/${pos.lon}`,"_blank")};
 let dp;addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;installBtn.classList.remove("hidden")});installBtn.onclick=async()=>{if(dp){dp.prompt();dp=null}};
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));
 </script></body></html>
