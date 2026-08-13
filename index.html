@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1464c4">
+<meta name="description" content="Tembisa & Ivory Park GPS Weather — local weather, GPS, maps, routes and nearby places.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Tembisa & Ivory Park GPS Weather</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#eef6ff;color:#17324d}
+header{background:#1464c4;color:#fff;padding:18px 16px;text-align:center;position:sticky;top:0;z-index:1000}
+header h1{margin:0;font-size:24px}header p{margin:6px 0 0;font-size:14px}
+main{max-width:850px;margin:auto;padding:14px}.card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 3px 14px #00000012}
+h2{font-size:19px;margin:4px 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+select,button,input{width:100%;padding:13px;border-radius:12px;border:1px solid #ccd8e5;font-size:15px}
+button{background:#1464c4;color:#fff;border:0;font-weight:bold;cursor:pointer}.secondary{background:#e8f2ff;color:#1464c4}.danger{background:#c62828}
+#map{height:360px;border-radius:14px;overflow:hidden}.weather{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#f4f8fc;border-radius:12px;padding:12px}.stat b{display:block;font-size:20px;margin-top:4px}
+.forecast{display:flex;gap:8px;overflow:auto}.day{min-width:105px;background:#f4f8fc;border-radius:12px;padding:10px;text-align:center}
+.notice{background:#e8f4ff;border-left:4px solid #1464c4;padding:10px;border-radius:8px}
+.routebox{display:grid;gap:10px}.small{font-size:12px;color:#61758a}.status{font-weight:bold}.places{display:grid;gap:8px}.place{padding:10px;background:#f7fafc;border-radius:10px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}#map{height:300px}}
+</style>
+</head>
+<body>
+<header><h1>🌦️ Tembisa & Ivory Park GPS Weather</h1><p>Local weather • GPS • maps • driver route weather</p></header>
+<main>
+<section class="card">
+<h2>📍 My GPS</h2>
+<div id="gpsStatus" class="notice">GPS has not been selected yet.</div>
+<div class="grid" style="margin-top:10px">
+<button onclick="useGPS()">📍 Use My GPS Location</button>
+<button class="secondary" onclick="openLocationSettings()">⚙️ Location Settings</button>
+</div>
+</section>
+
+<section class="card">
+<h2>🏘️ Local area weather</h2>
+<div class="grid">
+<select id="town" onchange="loadSections()"><option>Tembisa</option><option>Ivory Park</option><option>Ebony Park</option><option>Rabie Ridge</option><option>Clayville</option><option>Kaalfontein</option><option>Mayibuye</option><option>Esselen Park</option><option>Tswelopele</option><option>Vusimuzi</option><option>Winnie Mandela Park</option></select>
+<select id="section"></select>
+</div>
+<button style="margin-top:10px" onclick="getAreaWeather()">🌦️ Get Area Weather</button>
+<div id="areaWeather" style="margin-top:12px"></div>
+</section>
+
+<section class="card">
+<h2>🚕 Driver Mode</h2>
+<select id="driverType">
+<option>Taxi</option><option>Private car</option><option>Delivery vehicle</option><option>Bolt / ride-hailing</option>
+</select>
+<div class="grid" style="margin-top:10px">
+<input id="destination" placeholder="Destination, e.g. Mall of Africa">
+<button onclick="startDriverMode()">🚗 Start Route Weather</button>
+</div>
+<div id="routeStatus" class="notice" style="margin-top:10px">Choose a destination to monitor your route.</div>
+</section>
+
+<section class="card">
+<h2>🗺️ Live map</h2>
+<div id="map"></div>
+<div class="small" style="margin-top:7px">Your GPS marker and route vehicle appear on the map when location permission is available.</div>
+</section>
+
+<section class="card">
+<h2>🏫 Nearby places</h2>
+<div class="grid">
+<select id="placeType">
+<option value="school">Schools</option><option value="place_of_worship">Churches / places of worship</option>
+<option value="clinic">Clinics / hospitals</option><option value="police">Police stations</option>
+<option value="fuel">Petrol stations</option><option value="shop">Shops</option>
+</select>
+<button onclick="findNearbyPlaces()">🔎 Find Nearby</button>
+</div>
+<div id="places" class="places" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+<h2>📅 7-day forecast</h2>
+<div id="forecast" class="forecast"><div class="notice">Select an area or use GPS.</div></div>
+</section>
+
+<section class="card">
+<h2>📲 Share</h2>
+<button onclick="shareApp()">Share Tembisa & Ivory Park GPS Weather</button>
+<p class="small">The website is designed for phones and can be installed from Chrome using “Add to Home screen” once it is published over HTTPS.</p>
+</section>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const areas={
+"Tembisa":["Difateng","Ecaleni","Ehlanzeni / Enhlanzeni","Elidinga","Eliliba / Liliba","Emangeni","Emfihlweni","Emkhathini","Endulwini","Entshonalanga","Esangweni","Esiphetweni / Isiphetweni","Esiziba / Isiziba","Ethafeni","Hospital Garden / Hospital View","Ibaxa","Jiyane","Khalambazo","Kopanong","Leboeng","Lekaneng","Makhulong","Maokeng / Moakeng","Mashimong","Moedi","Moriting / Meriting","Moteong","Motsu","Mqantsa","Mthambeka / Umthambeka","Phomolong","Sedibeng","Sethokga","Teanong","Temong","Tlamatlama","Tsenelong","Tshepo / Tsepo","Umnonjaneni","Xubeni"],
+"Ivory Park":["Extension 2","Extension 6","Extension 7","Extension 8 - Rebonwe Primary School","Extension 8 - Clinic","Extension 9","Extension 10","Extension 11","Extension 12","Extension 13","Extension 14","Extension 15","Dali Mpofu","Ivory Park Central"],
+"Ebony Park":["Ebony Park","Ebony Park Extension 1","Ebony Park Extension 2","Ebony Park Extension 3","Ebony Park Extension 4","Ebony Park Extension 5","Ebony Park Extension 6","Ebony Park Extension 7","Ebony Park Extension 8","Ebony Park Extension 9"],
+"Rabie Ridge":["Rabie Ridge","Rabie Ridge Extension 1","Rabie Ridge Extension 2"],
+"Clayville":["Clayville","Clayville Extension 1","Clayville Extension 2","Clayville Extension 4","Clayville Extension 5"],
+"Kaalfontein":["Kaalfontein"],
+"Mayibuye":["Mayibuye"],
+"Esselen Park":["Esselen Park"],
+"Tswelopele":["Tswelopele"],
+"Vusimuzi":["Vusimuzi"],
+"Winnie Mandela Park":["Winnie Mandela Park"]
+};
+const coords={
+"Tembisa":[-26.0088,28.2260],"Ivory Park":[-25.9810,28.2230],"Ebony Park":[-25.9745,28.2125],
+"Rabie Ridge":[-25.9878,28.1700],"Clayville":[-25.9755,28.2050],"Kaalfontein":[-25.999,28.205],
+"Mayibuye":[-25.997,28.183],"Esselen Park":[-25.974,28.247],"Tswelopele":[-25.995,28.238],
+"Vusimuzi":[-26.015,28.238],"Winnie Mandela Park":[-25.965,28.235]
+};
+let map, userMarker, routeLine, vehicleMarker, userPos=null;
+function init(){
+ map=L.map('map').setView(coords.Tembisa,12);
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+ loadSections(); getAreaWeather();
+}
+function loadSections(){
+ const t=document.getElementById('town').value,s=document.getElementById('section');
+ s.innerHTML=(areas[t]||[]).map((x,i)=>`<option>${x}</option>`).join('');
+}
+function showMap(lat,lon,zoom=14){
+ if(userMarker) userMarker.setLatLng([lat,lon]); else userMarker=L.marker([lat,lon]).addTo(map).bindPopup('📍 Your location').openPopup();
+ map.setView([lat,lon],zoom);
+}
+function useGPS(){
+ document.getElementById('gpsStatus').textContent='Requesting GPS permission…';
+ navigator.geolocation.getCurrentPosition(p=>{
+  userPos=[p.coords.latitude,p.coords.longitude]; showMap(...userPos);
+  document.getElementById('gpsStatus').innerHTML=`<b>GPS active.</b> Accuracy: ${Math.round(p.coords.accuracy)} m<br>${userPos[0].toFixed(5)}, ${userPos[1].toFixed(5)}`;
+  getWeather(...userPos,'Your GPS location'); findNearbyPlaces();
+ },e=>{
+  document.getElementById('gpsStatus').innerHTML='GPS permission/location is unavailable. Turn on Location for your browser and try again.';
+ },{enableHighAccuracy:true,timeout:15000,maximumAge:10000});
+}
+function openLocationSettings(){
+ try{location.href='intent:#Intent;action=android.settings.LOCATION_SOURCE_SETTINGS;end';}
+ catch(e){alert('Open your phone Settings → Location and turn Location ON, then return to this app.');}
+}
+async function getWeather(lat,lon,label){
+ const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=Africa%2FJohannesburg`;
+ try{
+  const d=await fetch(u).then(r=>r.json()); const c=d.current;
+  document.getElementById('areaWeather').innerHTML=`<div class="weather">
+  <div class="stat">📍 <span>${label}</span><b>${Math.round(c.temperature_2m)}°C</b></div>
+  <div class="stat">💨 Wind<b>${Math.round(c.wind_speed_10m)} km/h</b></div>
+  <div class="stat">💧 Humidity<b>${c.relative_humidity_2m}%</b></div>
+  <div class="stat">🌧️ Rain now<b>${c.precipitation} mm</b></div></div>`;
+  document.getElementById('forecast').innerHTML=d.daily.time.map((x,i)=>`<div class="day"><b>${new Date(x+'T12:00').toLocaleDateString('en-ZA',{weekday:'short'})}</b><div>🌤️</div><b>${Math.round(d.daily.temperature_2m_max[i])}° / ${Math.round(d.daily.temperature_2m_min[i])}°</b><div>${d.daily.precipitation_probability_max[i]}% rain</div></div>`).join('');
+ }catch(e){document.getElementById('areaWeather').innerHTML='<div class="notice">Weather service needs an internet connection.</div>'}
+}
+function getAreaWeather(){
+ const t=document.getElementById('town').value; const c=coords[t]; if(c)getWeather(c[0],c[1],`${t} — ${document.getElementById('section').value}`);
+}
+async function geocode(q){
+ const d=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q+', Gauteng, South Africa')).then(r=>r.json());
+ return d[0]?{lat:+d[0].lat,lon:+d[0].lon,name:d[0].display_name}:null;
+}
+async function startDriverMode(){
+ if(!userPos){useGPS(); document.getElementById('routeStatus').textContent='Allow GPS first, then press Start Route Weather again.'; return;}
+ const q=document.getElementById('destination').value.trim(); if(!q){alert('Enter a destination first.');return;}
+ document.getElementById('routeStatus').textContent='Finding destination and route…';
+ try{
+  const dest=await geocode(q); if(!dest)throw Error('Destination not found');
+  const r=await fetch(`https://router.project-osrm.org/route/v1/driving/${userPos[1]},${userPos[0]};${dest.lon},${dest.lat}?overview=full&geometries=geojson`).then(x=>x.json());
+  if(!r.routes?.[0])throw Error('Route unavailable');
+  const route=r.routes[0]; if(routeLine)map.removeLayer(routeLine);
+  routeLine=L.geoJSON(route.geometry).addTo(map); map.fitBounds(routeLine.getBounds(),{padding:[20,20]});
+  if(vehicleMarker)map.removeLayer(vehicleMarker);
+  vehicleMarker=L.marker(userPos).addTo(map).bindPopup('🚗 '+document.getElementById('driverType').value).openPopup();
+  const mins=Math.round(route.duration/60),km=(route.distance/1000).toFixed(1);
+  document.getElementById('routeStatus').innerHTML=`<b>${document.getElementById('driverType').value} mode active.</b><br>Route: ${km} km • about ${mins} min<br>Weather is monitored from your current GPS area.`;
+  animateVehicle(route.geometry.coordinates);
+ }catch(e){document.getElementById('routeStatus').textContent='Could not create the route. Check the destination and internet connection.';}
+}
+function animateVehicle(coords){
+ let i=0; const step=()=>{if(!vehicleMarker||i>=coords.length)return;vehicleMarker.setLatLng([coords[i][1],coords[i][0]]);i++;setTimeout(step,80)};step();
+}
+async function findNearbyPlaces(){
+ const center=userPos||coords[document.getElementById('town').value]; const type=document.getElementById('placeType').value;
+ const q=`[out:json][timeout:15];(node[amenity=${type}](around:5000,${center[0]},${center[1]});way[amenity=${type}](around:5000,${center[0]},${center[1]}););out center tags;`;
+ document.getElementById('places').innerHTML='<div class="notice">Searching nearby places…</div>';
+ try{const d=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q}).then(r=>r.json());
+ const a=d.elements.slice(0,15).map(e=>({name:e.tags?.name||'Unnamed place',lat:e.lat||e.center?.lat,lon:e.lon||e.center?.lon}));
+ document.getElementById('places').innerHTML=a.length?a.map(p=>`<div class="place"><b>${p.name}</b><br><button class="secondary" onclick="showMap(${p.lat},${p.lon})">📍 Show on map</button></div>`).join(''):'<div class="notice">No mapped places found nearby.</div>';
+ }catch(e){document.getElementById('places').innerHTML='<div class="notice">Nearby-place search needs an internet connection.</div>'}
+}
+function shareApp(){if(navigator.share)navigator.share({title:'Tembisa & Ivory Park GPS Weather',text:'Local weather, GPS, maps and driver route weather'});else alert('Use Chrome menu → Share to share this app.')}
+init();
+</script>
+</body>
+</html>

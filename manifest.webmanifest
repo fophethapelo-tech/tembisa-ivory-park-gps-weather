@@ -1,0 +1,10 @@
+{
+  "name":"Tembisa & Ivory Park GPS Weather",
+  "short_name":"Tembisa Weather",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#eef6ff",
+  "theme_color":"#1464c4",
+  "description":"Local weather, GPS, maps, routes and nearby places for Tembisa, Ivory Park and surrounding communities.",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
