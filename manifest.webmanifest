@@ -1,1 +1,19 @@
-{"name":"Tembisa & Ivory Park GPS Weather","short_name":"Tembisa Weather","start_url":"./","display":"standalone","theme_color":"#087fbd","background_color":"#eef8fd","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
+{
+  "name": "Tembisa & Ivory Park GPS Weather",
+  "short_name": "Tembisa Weather",
+  "description": "GPS weather, maps, route weather, nearby places and local area information for Tembisa, Ivory Park and surrounding areas.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#eef8fd",
+  "theme_color": "#087fbd",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

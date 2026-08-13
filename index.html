@@ -44,7 +44,7 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 <p class="small">Weather data: Open-Meteo</p></section>
 
 <section class="card"><h2>🚕 Driver Mode</h2><div class="grid">
-<div><label>Vehicle / trip type</label><select id="driverMode"><option>Taxi</option><option>Personal Car</option><option>Delivery</option><option>Bolt</option></select></div>
+<div><label>Vehicle / trip type</label><select id="driverMode"><option>Taxi</option><option>Personal Car</option><option>Delivery</option><option>Bolt</option><option>Pedestrian</option></select></div>
 <div><label>Destination</label><input id="destination" placeholder="e.g. school, church, clinic or area"></div></div>
 <div class="row"><button id="startRoute">🚕 Start Route Weather</button><button id="stopRoute" class="alt" disabled>⏹️ Stop Monitoring</button></div>
 <div id="routeStatus" class="status">Choose a destination to monitor your route.</div><div id="map"></div></section>
@@ -56,8 +56,8 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 <button data-cat="fuel">⛽ Petrol</button><button data-cat="shop">🛒 Shops</button>
 <button data-cat="atm">🏧 ATMs</button><button data-cat="bus_stop">🚌 Transport</button>
 </div>
-<div class="row"><input id="placeSearch" placeholder="Or type a place/category"><button id="nearbyBtn">🔎 Find Nearby</button></div>
-<div id="nearbyStatus" class="status">Start GPS first.</div><div id="places"></div></section>
+<div class="row"><input id="placeSearch" placeholder="Or type a place/category"><button id="nearbyBtn">🔎 Find Nearby</button><button id="voiceBtn" class="light">🎙️ Voice Command</button></div>
+<div id="nearbyStatus" class="status">Start GPS first.</div><div id="places"></div><div id="pedStatus" class="status">🚶 Pedestrian mode is available in Driver Mode and follows your GPS position.</div></section>
 
 <section class="card"><h2>🗺️ Open location in Maps</h2><div class="row">
 <button id="mapsBtn">📍 Google Maps</button><button id="osmBtn" class="light">🗺️ OpenStreetMap</button></div></section>
@@ -79,7 +79,10 @@ muni.onchange=fill;fill();
 
 let pos=null,marker=null,circle=null,watch=null,line=null,destMarker=null,placeMarkers=[];
 const map=L.map("map").setView([-25.998,28.226],11);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"}).addTo(map);
+const streetLayer=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"});
+const satelliteLayer=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Tiles © Esri"});
+streetLayer.addTo(map);
+L.control.layers({"🗺️ Street":streetLayer,"🛰️ Satellite":satelliteLayer},null,{collapsed:false}).addTo(map);
 
 function setPos(p){pos={lat:p.coords.latitude,lon:p.coords.longitude,accuracy:p.coords.accuracy};let ll=[pos.lat,pos.lon];
 if(!marker)marker=L.marker(ll).addTo(map).bindPopup("📍 My GPS location");else marker.setLatLng(ll);
@@ -124,6 +127,32 @@ document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>nearby(b.datase
 nearbyBtn.onclick=()=>{let q=placeSearch.value.trim().toLowerCase(),k={school:"school",schools:"school",church:"place_of_worship",churches:"place_of_worship",clinic:"clinic",clinics:"clinic",police:"police",petrol:"fuel",fuel:"fuel",shop:"shop",shops:"shop",atm:"atm","bus stop":"bus_stop"};nearby(k[q]||"name")};
 mapsBtn.onclick=()=>{if(!pos){gps();return}window.open(`https://www.google.com/maps/@${pos.lat},${pos.lon},15z`,"_blank")};
 osmBtn.onclick=()=>{if(!pos){gps();return}window.open(`https://www.openstreetmap.org/?mlat=${pos.lat}&mlon=${pos.lon}#map=15/${pos.lat}/${pos.lon}`,"_blank")};
+
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SpeechRecognition){
+  voiceBtn.onclick=()=>{nearbyStatus.className="status warn";nearbyStatus.textContent="Voice commands are not supported here. Try Chrome on Android."};
+}else{
+  const recognition=new SpeechRecognition();
+  recognition.lang="en-ZA"; recognition.interimResults=false; recognition.maxAlternatives=1;
+  voiceBtn.onclick=()=>{
+    nearbyStatus.className="status listening";
+    nearbyStatus.textContent="🎙️ Listening… say a destination or nearby place.";
+    try{recognition.start()}catch(e){}
+  };
+  recognition.onresult=e=>{
+    const text=e.results[0][0].transcript.trim();
+    destination.value=text;
+    placeSearch.value=text;
+    nearbyStatus.className="status ok";
+    nearbyStatus.textContent="Heard: "+text;
+    const t=text.toLowerCase();
+    const k={school:"school",schools:"school",church:"place_of_worship",churches:"place_of_worship",clinic:"clinic",clinics:"clinic",police:"police",petrol:"fuel",fuel:"fuel",shop:"shop",shops:"shop",atm:"atm","bus stop":"bus_stop"};
+    let cat=null; for(const key in k){if(t.includes(key)){cat=k[key];break}}
+    if(t.includes("nearby")||cat){ nearby(cat||"name"); } else { startRoute.click(); }
+  };
+  recognition.onerror=()=>{nearbyStatus.className="status warn";nearbyStatus.textContent="Voice command was not heard. Please try again."};
+}
+
 let dp;addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;installBtn.classList.remove("hidden")});installBtn.onclick=async()=>{if(dp){dp.prompt();dp=null}};
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));
 </script></body></html>
