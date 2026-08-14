@@ -477,7 +477,68 @@ const reportBtn=document.getElementById("reportBtn"); if(reportBtn)reportBtn.onc
     alert("Open your phone Settings → Location and turn Location ON, then return to Chrome and allow this website to use location.");
   };
 })();
+/* LIVE MOVING VEHICLE */
 
+let vehicleMarker = null;
+
+function updateVehicleMarker(lat, lon) {
+  const mode = document.getElementById("driverMode")?.value || "Personal Car";
+
+  const icons = {
+    "Taxi": "🚕",
+    "Personal Car": "🚗",
+    "Delivery": "🚚",
+    "Bolt": "🚙",
+    "Pedestrian": "🚶"
+  };
+
+  const vehicleIcon = L.divIcon({
+    className: "live-vehicle",
+    html: `<div style="
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:white;
+      border:3px solid #087fbd;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:27px;
+      box-shadow:0 3px 12px rgba(0,0,0,.4);
+    ">${icons[mode] || "🚗"}</div>`,
+    iconSize:[44,44],
+    iconAnchor:[22,22]
+  });
+
+  if (!vehicleMarker) {
+    vehicleMarker = L.marker([lat, lon], {
+      icon: vehicleIcon,
+      zIndexOffset:2000
+    }).addTo(map);
+  } else {
+    vehicleMarker.setLatLng([lat, lon]);
+    vehicleMarker.setIcon(vehicleIcon);
+  }
+}
+
+const originalSetPos = setPos;
+
+setPos = function(p) {
+  originalSetPos(p);
+
+  if (p && p.coords) {
+    updateVehicleMarker(
+      p.coords.latitude,
+      p.coords.longitude
+    );
+  }
+};
+
+document.getElementById("driverMode")?.addEventListener("change", function() {
+  if (pos) {
+    updateVehicleMarker(pos.lat, pos.lon);
+  }
+});
 </script>
 </body>
 </html>
