@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fophethapelo-tech.github.io/tembisa-ivory-park-gps-weather/sitemap.xml

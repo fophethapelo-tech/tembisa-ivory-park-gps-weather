@@ -4,15 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#087fbd">
-<meta name="description" content="Tembisa & Ivory Park GPS Weather, local places, maps and driver route weather">
+<meta name="description" content="Tembisa & Ivory Park GPS Weather Nationwide — South Africa GPS, weather, maps, addresses and voice navigation.">
+<meta name="keywords" content="Tembisa, Ivory Park, South Africa GPS, weather, navigation, voice navigation, maps, addresses, nationwide">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Tembisa & Ivory Park GPS Weather — Nationwide">
+<meta property="og:description" content="South Africa nationwide GPS weather, maps and voice navigation.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fophethapelo-tech.github.io/tembisa-ivory-park-gps-weather/">
+<meta property="og:image" content="https://fophethapelo-tech.github.io/tembisa-ivory-park-gps-weather/icon-512.png">
+<link rel="canonical" href="https://fophethapelo-tech.github.io/tembisa-ivory-park-gps-weather/">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg">
-<title>Tembisa & Ivory Park GPS Weather</title>
+<link rel="icon" href="icon-192.png">
+<title>Tembisa & Ivory Park GPS Weather — Nationwide GPS & Voice Navigation</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#eef8fd;color:#17344a;font:16px Arial,sans-serif}
-header{background:linear-gradient(135deg,#0767ad,#0aa7d6);color:#fff;text-align:center;padding:24px 14px}
+header{background:linear-gradient(135deg,#0767ad,#0aa7d6);color:#fff;text-align:center;padding:20px 14px}
+.brand{display:flex;flex-direction:column;align-items:center;gap:7px}.brand img{width:92px;height:92px;border-radius:20px;object-fit:cover;box-shadow:0 3px 12px #001b2a55}.nationwide{font-size:12px;letter-spacing:3px;font-weight:800;text-transform:uppercase;opacity:.95}
 h1{margin:0 0 7px;font-size:27px}header p{margin:0}
 .wrap{max-width:1050px;margin:auto;padding:14px}
 .card{background:#fff;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 3px 14px #17344a18}
@@ -27,20 +36,22 @@ button.alt{background:#466170}button.light{background:#e7f5fb;color:#075b85}
 .ok{border-left:5px solid #14845b}.warn{border-left:5px solid #b26b00}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stat{padding:14px;background:#f5fbfe;border-radius:13px}.stat b{display:block;font-size:22px;margin-top:5px}
-#map{height:390px;border-radius:14px;margin-top:12px}
+#map{height:560px;border-radius:14px;margin-top:12px;min-height:420px}.map-tools{display:flex;gap:8px;margin-top:10px}.map-tools button{padding:10px}.alert-list{display:grid;gap:8px;margin-top:10px}.alert-item{padding:10px 12px;border-radius:10px;background:#fff5e6;border-left:5px solid #b26b00}.safety{background:#f2f8ff;border-left:5px solid #087fbd}.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ad-slot{min-height:54px;border:1px dashed #b8cbd5;border-radius:12px;padding:12px;text-align:center;color:#607587;font-size:13px}
 .small{font-size:13px;color:#607587}.hidden{display:none}
 .category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
 .category-grid button{padding:11px}
 .place{padding:12px;border:1px solid #dce8ee;border-radius:12px;margin-top:8px;background:#f9fcfd}
 .place b{display:block;margin-bottom:5px}.place a{display:inline-block;margin-top:7px;padding:8px 10px;background:#e7f5fb;border-radius:8px;color:#075b85;text-decoration:none;font-weight:bold}
 footer{text-align:center;color:#607587;padding:24px;font-size:13px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.row{flex-direction:column}h1{font-size:23px}.category-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.row{flex-direction:column}h1{font-size:23px}.category-grid{grid-template-columns:1fr 1fr}#map{height:66vh;min-height:470px}.map-tools{flex-wrap:wrap}.map-tools>*{flex:1}.report-grid{grid-template-columns:1fr}}
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Tembisa & Ivory Park GPS Weather — Nationwide","url":"https://fophethapelo-tech.github.io/tembisa-ivory-park-gps-weather/","applicationCategory":"NavigationApplication","operatingSystem":"Android, iOS, Windows, macOS, Linux","description":"South Africa nationwide GPS weather, maps, destination search and browser voice navigation."}</script>
 </head>
 <body>
-<header>
+<header><div style="text-align:center;margin-bottom:10px"><img src="logo-nationwide.png" alt="Tembisa & Ivory Park GPS Weather Nationwide" style="width:min(260px,75vw);height:auto;border-radius:18px"></div>
+<div class="brand"><img src="icon-512.png" alt="Tembisa & Ivory Park GPS Weather logo"><div class="nationwide">Nationwide</div></div>
 <h1>🌦️ Tembisa & Ivory Park GPS Weather</h1>
-<p>Local weather • GPS • maps • nearby places • driver route weather</p>
+<p>South Africa • GPS • weather • maps • voice navigation</p>
 </header>
 
 <main class="wrap">
@@ -56,6 +67,8 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 </section>
 
 <section class="card">
+<h2>🇿🇦 South Africa Nationwide Search</h2>
+<p class="small">For any province, town, suburb, street number, street name or landmark, use the destination box in Driver Mode. The local-area shortcuts below remain focused on Tembisa, Ivory Park and nearby areas.</p>
 <h2>🏘️ Local area weather</h2>
 <div class="grid">
 <div><label>Area</label><select id="municipality"></select></div>
@@ -82,14 +95,14 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 <div><label>Vehicle / trip type</label><select id="driverMode">
 <option>Taxi</option><option>Personal Car</option><option>Delivery</option><option>Bolt</option>
 </select></div>
-<div><label>Destination</label><input id="destination" placeholder="e.g. Tembisa Mall, school or church"></div>
+<div><label>Destination</label><input id="destination" placeholder="Street number + street name, suburb, town or landmark"></div>
 </div>
 <div class="row">
 <button id="startRoute">🚕 Start Route Weather</button>
-<button id="stopRoute" class="alt" disabled>⏹️ Stop Monitoring</button>
+<button id="stopRoute" class="alt" disabled>⏹️ Stop Navigation</button>
 </div>
 <div id="routeStatus" class="status">Choose a destination to monitor your route.</div>
-<div id="map"></div>
+<div class="map-tools"><button id="mapStreet" class="light">🗺️ Street</button><button id="mapSatellite" class="light">🛰️ Satellite</button><button id="mapLocate" class="light">📍 My Location</button><button id="mapFull" class="light">⛶ Full Map</button></div><div id="map"></div><div id="routeAlerts" class="alert-list"></div>
 </section>
 
 <section class="card">
@@ -122,9 +135,27 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 </div>
 </section>
 
+<section class="card safety">
+<h2>🛡️ Driver Safety</h2>
+<p>Before moving: <b>fasten your seat belt, never drink and drive, put the phone down, keep your eyes on the road, and obey traffic signs and speed limits.</b></p>
+<button id="safetyBtn" class="light">🔊 Hear Safety Reminder</button>
+</section>
+
+<section class="card">
+<h2>🚨 Report a Road Hazard</h2>
+<p>Drivers can record a nearby hazard for this device. Shared live reports for all users require a secure online backend; this app never invents accident or crime reports.</p>
+<div class="report-grid"><select id="reportType"><option>Pothole</option><option>Accident</option><option>Heavy traffic</option><option>Road closure</option><option>Broken traffic light</option><option>Other hazard</option><option>Safety concern</option></select><button id="reportBtn">📢 Report at My Location</button></div>
+<div id="reportStatus" class="status">No report submitted.</div>
+</section>
+
+<section class="card">
+<h2>📢 Advertising</h2>
+<div class="ad-slot">Advertising space — real advertising revenue requires an approved advertising account and publisher code.</div>
+</section>
+
 <section class="card">
 <h2>📱 Install on your phone</h2>
-<p>If Chrome shows <b>Install</b> or <b>Add to Home screen</b>, use it to install this web app.</p>
+<p>On supported Android/Chrome devices, use <b>Install App</b> or Chrome → <b>Add to Home screen</b>. The site is served over HTTPS so it can be installed as a PWA.</p>
 <button id="installBtn" class="light hidden">📲 Install App</button>
 </section>
 
@@ -141,7 +172,7 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 <div id="settingsStatus" class="status">Settings are saved on this device.</div>
 </section>
 </main>
-<footer>Tembisa & Ivory Park GPS Weather • Local community web app</footer>
+<footer>Tembisa & Ivory Park GPS Weather • Nationwide South Africa • GPS • Weather • Voice Navigation</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -156,9 +187,10 @@ function fill(){sec.innerHTML="";areas[muni.value].forEach(x=>{let o=document.cr
 muni.onchange=fill;fill();
 
 let pos=null,marker=null,circle=null,watch=null,line=null,destMarker=null;
-const map=L.map("map").setView([-25.998,28.226],11);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"}).addTo(map);
-let placeMarkers=[];
+const streetLayer=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"});
+const satelliteLayer=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Tiles © Esri"});
+const map=L.map("map",{layers:[streetLayer]}).setView([-25.998,28.226],11);
+let currentMapLayer="street", placeMarkers=[], routeAlerts=[];
 
 function setPos(p){
 pos={lat:p.coords.latitude,lon:p.coords.longitude,accuracy:p.coords.accuracy};
@@ -197,9 +229,9 @@ rain.textContent=(c.rain||0)+" mm";
 
 async function geo(q){
 try{
-let u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=za&q="+encodeURIComponent(q+", Gauteng, South Africa");
+let u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=za&q="+encodeURIComponent(q+", South Africa");
 let a=await fetch(u).then(r=>r.json());
-return a[0]?{lat:+a[0].lat,lon:+a[0].lon}:null;
+return a[0]?{lat:+a[0].lat,lon:+a[0].lon,display:a[0].display_name||q,address:a[0].address||{}}:null;
 }catch(e){return null}
 }
 
@@ -214,24 +246,29 @@ map.setView([g.lat,g.lon],14);weather(g.lat,g.lon);
 };
 
 startRoute.onclick=async()=>{
-if(!pos){gps();routeStatus.textContent="Starting GPS. Press Start Route Weather again after GPS activates.";return}
+if(!pos){gps();routeStatus.textContent="Getting your GPS location. Please press Start Route Weather again when GPS is active.";return}
 let q=destination.value.trim();
-if(!q){routeStatus.textContent="Enter a destination first.";return}
-routeStatus.textContent="Finding destination…";
+if(!q){routeStatus.className="status warn";routeStatus.textContent="Please enter or say your destination first.";speak("Please choose your destination.");return}
+routeStatus.className="status";routeStatus.textContent="Finding your destination and calculating the route…";
 let g=await geo(q);
-if(!g){routeStatus.textContent="Destination not found. Try a landmark, school, church, clinic or area name.";return}
+if(!g){routeStatus.className="status warn";routeStatus.textContent="Destination not found. Try a town, suburb, street, landmark, school, church, hospital, mall or petrol station in South Africa.";speak("I could not find that destination. Please try again.");return}
 if(destMarker)destMarker.remove();
-destMarker=L.marker([g.lat,g.lon]).addTo(map).bindPopup("🏁 "+q).openPopup();
-if(line)line.remove();
-line=L.polyline([[pos.lat,pos.lon],[g.lat,g.lon]],{weight:6}).addTo(map);
-map.fitBounds(line.getBounds(),{padding:[30,30]});
+destMarker=L.marker([g.lat,g.lon]).addTo(map).bindPopup("🏁 "+escapeHtml(q)).openPopup();
+try{
+const route=await buildTurnByTurnRoute(pos,{lat:g.lat,lon:g.lon},driverMode.value);
+const km=(route.distance/1000).toFixed(1);
+const mins=Math.max(1,Math.round(route.duration/60));
 routeStatus.className="status ok";
-routeStatus.innerHTML="<b>"+driverMode.value+" mode active.</b> Vehicle position is updating on the map.<br>Destination: "+q;
+routeStatus.innerHTML="<b>"+escapeHtml(driverMode.value)+" navigation active.</b><br>Destination: "+escapeHtml(g.display)+"<br>Distance: <b>"+km+" km</b> • Estimated time: <b>"+mins+" min</b><br>Voice guidance is on.";
+speak("Drive safely. Fasten your seat belt. Never drink and drive. Put your phone down while driving and keep your eyes on the road. Obey traffic signs and speed limits. Destination found. You are approximately "+km+" kilometres away. Estimated travel time is "+mins+" minutes. Navigation starting."); loadRouteAlerts(route.geometry.coordinates);
 startRoute.disabled=true;stopRoute.disabled=false;
 if(watch)navigator.geolocation.clearWatch(watch);
-watch=navigator.geolocation.watchPosition(p=>{
-setPos(p);if(line)line.setLatLngs([[p.coords.latitude,p.coords.longitude],[g.lat,g.lon]])
-},gpsErr,{enableHighAccuracy:true,maximumAge:3000,timeout:15000});
+watch=navigator.geolocation.watchPosition(p=>{setPos(p);},gpsErr,{enableHighAccuracy:true,maximumAge:3000,timeout:15000});
+}catch(e){
+routeStatus.className="status warn";
+routeStatus.textContent="The route service is temporarily unavailable. Please try again.";
+speak("I could not calculate the route right now. Please try again.");
+}
 };
 
 stopRoute.onclick=()=>{
@@ -314,110 +351,118 @@ addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;installBtn.cl
 installBtn.onclick=async()=>{if(dp){dp.prompt();dp=null}};
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));
 
-/* FINAL VOICE TURN-BY-TURN NAVIGATION */
-let routeSteps=[], nextStepIndex=0, routeDestination=null, lastSpoken="";
-const spoken = window.speechSynthesis;
+/* FINAL NATIONWIDE VOICE TURN-BY-TURN NAVIGATION */
+let routeSteps=[], nextStepIndex=0, routeDestination=null, lastSpoken="", lastDistanceAnnouncement=Infinity, spokenAlertIds=new Set();
+const spoken=window.speechSynthesis;
 function speak(text){
-  if(localStorage.getItem("voiceNavigation")==="off") return;
-  if(!spoken || !text || text===lastSpoken) return;
-  lastSpoken=text;
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang="en-ZA"; u.rate=0.95; u.pitch=1;
-  spoken.cancel(); spoken.speak(u);
+ if(localStorage.getItem("voiceNavigation")==="off") return;
+ if(!spoken||!text) return;
+ lastSpoken=text; const u=new SpeechSynthesisUtterance(text); u.lang="en-ZA"; u.rate=0.95; u.pitch=1; spoken.cancel(); spoken.speak(u);
 }
 function directionText(step){
-  const m=step.maneuver||{}, type=m.type||"", mod=m.modifier||"";
-  if(type==="arrive") return "You have reached your destination.";
-  if(type==="depart") return "Start your route.";
-  if(type==="roundabout" || type==="rotary"){
-    return "At the roundabout, take exit "+(m.exit||"")+"." ;
-  }
-  if(mod==="left") return "Turn left.";
-  if(mod==="right") return "Turn right.";
-  if(mod==="slight left") return "Bear slightly left.";
-  if(mod==="slight right") return "Bear slightly right.";
-  if(mod==="sharp left") return "Turn sharply left.";
-  if(mod==="sharp right") return "Turn sharply right.";
-  if(type==="continue" || mod==="straight") return "Continue straight.";
-  return "Continue on your route.";
+ const m=step.maneuver||{}, type=m.type||"", mod=m.modifier||"";
+ const road=(step.name||step.ref||"").trim(); const onto=road?" onto "+road:"";
+ if(type==="arrive") return "You have reached your destination.";
+ if(type==="depart") return road?"Start by following "+road+".":"Start your route.";
+ if(type==="roundabout"||type==="rotary") return m.exit?("At the roundabout, take exit "+m.exit+(road?" onto "+road:""))+".":"At the roundabout, follow the route.";
+ if(mod==="left") return "Turn left"+onto+"."; if(mod==="right") return "Turn right"+onto+".";
+ if(mod==="slight left") return "Bear slightly left"+onto+"."; if(mod==="slight right") return "Bear slightly right"+onto+".";
+ if(mod==="sharp left") return "Turn sharply left"+onto+"."; if(mod==="sharp right") return "Turn sharply right"+onto+".";
+ if(type==="continue"||mod==="straight") return road?"Continue on "+road+".":"Continue straight.";
+ return road?"Continue on "+road+".":"Continue on your route.";
 }
-function hav(a,b){
-  const R=6371000, p=Math.PI/180, dLat=(b[1]-a[1])*p, dLon=(b[0]-a[0])*p;
-  const x=Math.sin(dLat/2)**2+Math.cos(a[1]*p)*Math.cos(b[1]*p)*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.sqrt(x));
+function hav(a,b){const R=6371000,p=Math.PI/180,dLat=(b[1]-a[1])*p,dLon=(b[0]-a[0])*p;const x=Math.sin(dLat/2)**2+Math.cos(a[1]*p)*Math.cos(b[1]*p)*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+function nextStepDistance(lat,lon){
+ if(!routeSteps.length) return null; const step=routeSteps[Math.min(nextStepIndex,routeSteps.length-1)]; const loc=step.maneuver&&step.maneuver.location; return loc?hav([lon,lat],loc):null;
 }
 function checkNavigation(lat,lon){
-  if(!routeSteps.length) return;
-  const step=routeSteps[Math.min(nextStepIndex,routeSteps.length-1)];
-  const loc=step.maneuver && step.maneuver.location;
-  if(!loc) return;
-  const d=hav([lon,lat],loc);
-  if(d<35){
-    const text=directionText(step);
-    speak(text);
-    nextStepIndex++;
-    if(step.maneuver && step.maneuver.type==="arrive"){
-      routeSteps=[];
-      routeDestination=null;
-      routeStatus.className="status ok";
-      routeStatus.innerHTML="<b>🏁 You have reached your destination.</b>";
-    }
-  }else if(d<150){
-    const text=directionText(step);
-    if(text!=="Start your route." && text!==lastSpoken) speak(text);
-  }
+ if(routeAlerts.length){
+   routeAlerts.forEach((x,i)=>{
+     if(x.lat==null||x.lon==null||spokenAlertIds.has(i))return;
+     const d=routeFeatureDistance(lat,lon,{lat:x.lat,lon:x.lon});
+     if(d<140){
+       let msg=x.tags?.highway==="traffic_signals"?"Traffic light ahead. Prepare to slow down.":x.tags?.highway==="stop"?"Stop sign ahead. Slow down and stop.":x.tags?.highway==="crossing"?"Pedestrian crossing ahead. Slow down and watch for pedestrians.":(x.tags?.hazard==="pothole"?"Pothole reported ahead. Reduce speed and take care.":null);
+       if(msg){speak(msg);spokenAlertIds.add(i);}
+     }
+   });
+ }
+ if(!routeSteps.length)return;
+ const step=routeSteps[Math.min(nextStepIndex,routeSteps.length-1)]; const loc=step.maneuver&&step.maneuver.location; if(!loc)return;
+ const d=hav([lon,lat],loc);
+ if(d<35){
+   const text=directionText(step); speak(text); nextStepIndex++;
+   if(step.maneuver&&step.maneuver.type==="arrive"){
+     routeSteps=[]; routeDestination=null; routeStatus.className="status ok"; routeStatus.innerHTML="<b>🏁 You have reached your destination.</b>";
+     speak("You have reached your destination."); return;
+   }
+   lastDistanceAnnouncement=Infinity;
+ } else if(d<1500){
+   const rounded=d>=1000?Math.round(d/100)*100:Math.round(d/50)*50;
+   if(rounded>0 && Math.abs(rounded-lastDistanceAnnouncement)>=50){
+     const dir=directionText(step).replace(/\.$/,"");
+     if(rounded<=500 || d<1500){
+       speak("In approximately "+(rounded>=1000?(rounded/1000).toFixed(1)+" kilometres":rounded+" metres")+", "+dir.toLowerCase()+".");
+       lastDistanceAnnouncement=rounded;
+     }
+   }
+ }
 }
-async function buildTurnByTurnRoute(start,dest,mode){
-  const profile=(mode==="Pedestrian")?"foot":"driving";
-  const url="https://router.project-osrm.org/route/v1/"+profile+"/"+start.lon+","+start.lat+";"+dest.lon+","+dest.lat+"?overview=full&geometries=geojson&steps=true";
-  const r=await fetch(url);
-  if(!r.ok) throw new Error("Routing service unavailable");
-  const d=await r.json();
-  if(!d.routes || !d.routes[0]) throw new Error("No route found");
-  const route=d.routes[0];
-  routeSteps=(route.legs||[]).flatMap(l=>l.steps||[]);
-  nextStepIndex=0; routeDestination=dest; lastSpoken="";
-  if(line) line.remove();
-  line=L.geoJSON(route.geometry,{style:{weight:7}}).addTo(map);
-  map.fitBounds(line.getBounds(),{padding:[30,30]});
-  speak("Route started. "+(routeSteps[0]?directionText(routeSteps[0]):"Continue to your destination."));
-  return route;
+function speakSafety(){
+ if(localStorage.getItem("voiceNavigation")==="off") return;
+ speak("Drive safely. Fasten your seat belt. Never drink and drive. Put your phone down while driving and keep your eyes on the road. Obey traffic signs and speed limits.");
 }
 
-/* Voice command input */
+function routeFeatureDistance(lat,lon,feature){return distanceKm(lat,lon,feature.lat,feature.lon)*1000;}
+async function loadRouteAlerts(coords){
+ const box=coords.reduce((b,c)=>[Math.min(b[0],c[1]),Math.min(b[1],c[0]),Math.max(b[2],c[1]),Math.max(b[3],c[0])],[90,180,-90,-180]);
+ const pad=0.01; const south=box[0]-pad,west=box[1]-pad,north=box[2]+pad,east=box[3]+pad;
+ const q=`[out:json][timeout:20];(node[highway=traffic_signals](${south},${west},${north},${east});node[highway=stop](${south},${west},${north},${east});node[highway=crossing](${south},${west},${north},${east});node[hazard=pothole](${south},${west},${north},${east});node["hazard"="pothole"](${south},${west},${north},${east}););out tags;`;
+ try{const r=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:q}); const d=await r.json(); routeAlerts=d.elements||[]; spokenAlertIds=new Set(); const panel=document.getElementById("routeAlerts"); panel.innerHTML=""; const types={traffic_signals:"🚦 Traffic light ahead",stop:"🛑 Stop sign ahead",crossing:"🚶 Pedestrian crossing ahead"}; let shown=0; routeAlerts.forEach(x=>{let t=types[x.tags?.highway]||(x.tags?.hazard==="pothole"?"⚠️ Pothole reported on the map":"⚠️ Road hazard"); const dist=routeFeatureDistance(pos.lat,pos.lon,{lat:x.lat,lon:x.lon}); if(dist<10000&&shown<12){const div=document.createElement("div");div.className="alert-item";div.textContent=t;panel.appendChild(div);shown++;}}); }catch(e){document.getElementById("routeAlerts").innerHTML="<div class='small'>Road-feature alerts are temporarily unavailable.</div>"}
+}
+
+async function buildTurnByTurnRoute(start,dest,mode){
+ const profile=(mode==="Pedestrian")?"foot":"driving";
+ const url="https://router.project-osrm.org/route/v1/"+profile+"/"+start.lon+","+start.lat+";"+dest.lon+","+dest.lat+"?overview=full&geometries=geojson&steps=true";
+ const r=await fetch(url); if(!r.ok)throw new Error("Routing service unavailable"); const d=await r.json();
+ if(!d.routes||!d.routes[0])throw new Error("No route found"); const route=d.routes[0];
+ routeSteps=(route.legs||[]).flatMap(l=>l.steps||[]); nextStepIndex=0; spokenAlertIds=new Set(); routeDestination=dest; lastSpoken=""; lastDistanceAnnouncement=Infinity;
+ if(line)line.remove(); line=L.geoJSON(route.geometry,{style:{weight:7}}).addTo(map); map.fitBounds(line.getBounds(),{padding:[30,30]});
+ return route;
+}
+function startVoiceDestination(){
+ if(!recognition){speak("Voice recognition is not available in this browser. Please type your destination.");return;}
+ speak("Please choose your destination. Say the town, suburb, street, landmark, school, church, hospital, shopping centre or other place you want to go to.");
+ try{recognition.start();}catch(e){}
+}
 let recognition=null;
 const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(SpeechRecognition){
-  recognition=new SpeechRecognition();
-  recognition.lang="en-ZA";
-  recognition.interimResults=false;
-  recognition.maxAlternatives=1;
-  recognition.onresult=e=>{
-    const text=e.results[0][0].transcript;
-    if(document.getElementById("destination")) document.getElementById("destination").value=text;
-    const s=document.getElementById("nearbyStatus");
-    if(s) s.innerHTML="🎙️ Heard: <b>"+escapeHtml(text)+"</b>";
-    if(document.getElementById("startRoute")) document.getElementById("startRoute").click();
-  };
-  recognition.onerror=()=>{const s=document.getElementById("nearbyStatus"); if(s) s.textContent="Voice command was not heard. Please try again.";};
+ recognition=new SpeechRecognition(); recognition.lang="en-ZA"; recognition.interimResults=false; recognition.maxAlternatives=1;
+ recognition.onresult=e=>{const text=e.results[0][0].transcript;if(destination)destination.value=text;nearbyStatus.innerHTML="🎙️ Heard: <b>"+escapeHtml(text)+"</b>";startRoute.click();};
+ recognition.onerror=()=>{nearbyStatus.className="status warn";nearbyStatus.textContent="Voice command was not heard. Please try again.";speak("I did not hear you. Please say your destination again.");};
 }
 const voiceBtn=document.getElementById("voiceBtn");
-if(voiceBtn) voiceBtn.onclick=()=>{
-  if(!recognition){alert("Voice recognition is not supported by this browser. Try Chrome on Android.");return}
-  try{spoken.cancel();recognition.start();}catch(e){}
-};
+if(voiceBtn)voiceBtn.onclick=startVoiceDestination; const voiceBtn2=document.getElementById("voiceBtn2"); if(voiceBtn2)voiceBtn2.onclick=()=>{const s=document.getElementById("voiceStatus"); if(s)s.textContent="Listening… say your destination now."; startVoiceDestination();};
+const mapStreet=document.getElementById("mapStreet"),mapSatellite=document.getElementById("mapSatellite");
+if(mapStreet)mapStreet.onclick=()=>{if(currentMapLayer!=="street"){map.removeLayer(satelliteLayer);streetLayer.addTo(map);currentMapLayer="street";}localStorage.setItem("mapType","street");};
+if(mapSatellite)mapSatellite.onclick=()=>{if(currentMapLayer!=="satellite"){map.removeLayer(streetLayer);satelliteLayer.addTo(map);currentMapLayer="satellite";}localStorage.setItem("mapType","satellite");};
+const mapLocate=document.getElementById("mapLocate"); if(mapLocate)mapLocate.onclick=()=>{if(pos)map.setView([pos.lat,pos.lon],16);else gps();};
+const mapFull=document.getElementById("mapFull"); if(mapFull)mapFull.onclick=()=>{const el=document.getElementById("map"); if(el.requestFullscreen)el.requestFullscreen();};
+const savedMap=localStorage.getItem("mapType"); if(savedMap==="satellite")mapSatellite?.click();
+const safetyBtn=document.getElementById("safetyBtn"); if(safetyBtn)safetyBtn.onclick=speakSafety;
+const reportBtn=document.getElementById("reportBtn"); if(reportBtn)reportBtn.onclick=()=>{if(!pos){gps();return} const type=document.getElementById("reportType").value; const reports=JSON.parse(localStorage.getItem("roadReports")||"[]"); reports.push({type,lat:pos.lat,lon:pos.lon,time:new Date().toISOString()}); localStorage.setItem("roadReports",JSON.stringify(reports.slice(-100))); document.getElementById("reportStatus").className="status ok";document.getElementById("reportStatus").textContent="Reported: "+type+" at your current location. This device has saved the report."; speak("Report saved. Please keep driving safely.");};
 
 /* Settings */
 (function(){
   const S=JSON.parse(localStorage.getItem("tembisaSettings")||"{}");
   const sv=(id,key,def)=>{const e=document.getElementById(id); if(e)e.value=S[key]||def};
-  sv("settingsMapType","mapType","street"); sv("settingsTempUnit","tempUnit","C");
+  sv("settingsMapType","mapType",localStorage.getItem("mapType")||"street"); sv("settingsTempUnit","tempUnit","C");
   sv("settingsMode","mode","Taxi"); sv("settingsVoice","voice","on");
   if(S.voice==="off") localStorage.setItem("voiceNavigation","off"); else localStorage.setItem("voiceNavigation","on");
   const save=document.getElementById("saveSettings");
   if(save) save.onclick=()=>{
     const data={mapType:settingsMapType.value,tempUnit:settingsTempUnit.value,mode:settingsMode.value,voice:settingsVoice.value};
-    localStorage.setItem("tembisaSettings",JSON.stringify(data));
+    localStorage.setItem("tembisaSettings",JSON.stringify(data)); localStorage.setItem("mapType",data.mapType); if(data.mapType==="satellite") mapSatellite?.click(); else mapStreet?.click();
     localStorage.setItem("voiceNavigation",data.voice);
     if(typeof driverMode!=="undefined") driverMode.value=data.mode;
     const st=document.getElementById("settingsStatus");
