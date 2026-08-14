@@ -56,7 +56,44 @@ footer{text-align:center;color:#607587;padding:24px;font-size:13px}
 </header>
 
 <main class="wrap">
+<section class="card">
+<h2>⚡ Load Shedding & Power Status</h2>
+<p class="small">Check the latest South African electricity status and load-shedding information for your area.</p>
 
+<div class="grid">
+<div>
+<label>Area</label>
+<select id="loadArea">
+<option value="Tembisa">Tembisa</option>
+<option value="Ivory Park">Ivory Park</option>
+<option value="Johannesburg">Johannesburg</option>
+<option value="Ekurhuleni">Ekurhuleni</option>
+<option value="Pretoria">Pretoria</option>
+</select>
+</div>
+
+<div>
+<label>Information</label>
+<select id="loadInfo">
+<option value="status">Current Power Status</option>
+<option value="schedule">Load Shedding Schedule</option>
+</select>
+</div>
+</div>
+
+<button id="loadBtn" style="margin-top:12px">⚡ Check Power Status</button>
+
+<div id="loadStatus" class="status">
+Choose your area and check the latest information.
+</div>
+
+<div id="loadSchedule" class="place hidden"></div>
+
+<p class="small" style="margin-top:10px">
+Always confirm electricity information with the relevant municipality or Eskom, because schedules can change.
+</p>
+
+</section>
 <section class="card">
 <h2>📍 My GPS</h2>
 <div id="gpsStatus" class="status">GPS has not been started.</div>
