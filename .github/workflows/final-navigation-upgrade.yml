@@ -1,0 +1,45 @@
+name: Final navigation upgrade
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  upgrade:
+    if: ${{ !contains(github.event.head_commit.message, '[navigation-upgrade]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add navigation enhancement
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          tag='<script src="navigation-enhancements.js"></script>'
+          if tag not in s:
+              s=s.replace('</body>',tag+'</body>')
+              p.write_text(s,encoding='utf-8')
+          PY
+          cat > navigation-enhancements.js <<'EOF'
+          (function(){
+            const $=id=>document.getElementById(id);
+            function speak(text,force){if(!force&&$('voiceSetting')&&$('voiceSetting').value==='off')return;if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-ZA';u.rate=.9;u.volume=1;speechSynthesis.speak(u)}
+            function navSpeak(text){const n=(localStorage.getItem('navigatorName')||'').trim();speak(n?n+', '+text:text)}
+            const nav=$('navigatorName');
+            if(nav){const wrap=nav.parentElement;if(!document.getElementById('saveNavigatorName')){const b=document.createElement('button');b.id='saveNavigatorName';b.type='button';b.textContent='💾 Save Driver / Pedestrian Name';b.style.gridColumn='1 / -1';b.onclick=()=>{const n=nav.value.trim();if(n){localStorage.setItem('navigatorName',n);navSpeak('your name has been saved for navigation')}else{localStorage.removeItem('navigatorName');speak('Saved navigation name cleared.')}};wrap.appendChild(b)}const saved=localStorage.getItem('navigatorName');if(saved&&!nav.value)nav.value=saved}
+            setInterval(()=>{try{if(!window.navigating||!window.userPos)return;const now=Date.now();if(!window.__liveFollow||now-window.__liveFollow>1200){window.__liveFollow=now;if(window.map)window.map.setView([window.userPos.lat,window.userPos.lon],Math.max(window.map.getZoom(),17),{animate:true,duration:.4})}}catch(e){}},1000);
+            let lastWarn=0;setInterval(()=>{try{if(!window.navigating||!window.routeSteps||!window.routeSteps.length)return;if(Date.now()-lastWarn<7000)return;const s=window.routeSteps[Math.min(window.stepIndex||0,window.routeSteps.length-1)];const x=(((s&&s.name)||'')+' '+((s&&s.ref)||'')+' '+((s&&s.dest)||'')).toLowerCase();let w='';if(/motorway|freeway|expressway/.test(x))w='Freeway or motorway ahead.';else if(/trunk|highway/.test(x))w='Major highway ahead.';else if(/toll/.test(x))w='Toll road or toll gate ahead.';else if(/traffic signal|traffic light/.test(x))w='Traffic signal ahead.';if(w){lastWarn=Date.now();navSpeak(w)}}catch(e){}},3000);
+          })();
+          EOF
+          cat > manifest.json <<'EOF'
+          {"name":"Tembisa & Ivory Park GPS Weather","short_name":"Tembisa GPS","start_url":"./","display":"standalone","background_color":"#eef8fd","theme_color":"#087fbd","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+          EOF
+          cat > icon.svg <<'EOF'
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#087fbd"/><circle cx="256" cy="190" r="86" fill="#fff"/><path d="M256 430c-76-94-116-151-116-216a116 116 0 0 1 232 0c0 65-40 122-116 216z" fill="#fff"/><circle cx="256" cy="214" r="38" fill="#087fbd"/></svg>
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html navigation-enhancements.js manifest.json icon.svg
+          git diff --cached --quiet || git commit -m 'Final live navigation and PWA upgrade [navigation-upgrade]'
+          git push
