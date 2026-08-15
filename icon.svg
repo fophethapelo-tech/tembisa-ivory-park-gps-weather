@@ -1,1 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#087fbd"/><text x="256" y="310" text-anchor="middle" font-size="180">🌦️</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#087fbd"/><circle cx="256" cy="190" r="86" fill="#fff"/><path d="M256 430c-76-94-116-151-116-216a116 116 0 0 1 232 0c0 65-40 122-116 216z" fill="#fff"/><circle cx="256" cy="214" r="38" fill="#087fbd"/></svg>
