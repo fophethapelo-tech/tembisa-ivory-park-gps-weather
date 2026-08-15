@@ -18,7 +18,7 @@ if 'function navSpeak(' not in s:
     s=s.replace("speak(s.maneuver?.instruction||s.name||'Continue')","navSpeak(s.maneuver?.instruction||s.name||'Continue')")
     s=s.replace("speak('You have arrived at your destination.')","navSpeak('You have arrived at your destination.')")
     s=s.replace("speak($('travelMode').value==='foot'?'Walking navigation started.':'Navigation started.')","navSpeak($('travelMode').value==='foot'?'Walking navigation started.':'Navigation started.')")
-    s=s.replace("const w=safetyWarning($('travelMode').value);showWarning(w);speak(w,true);","const w=safetyWarning($('travelMode').value);showWarning(w);navSpeak(w,true);")
+s=s.replace("const w=safetyWarning($('travelMode').value);showWarning(w);speak(w,true);","const w=safetyWarning($('travelMode').value);showWarning(w);navSpeak(w,true);")
 if 'navigatorName' not in s[s.find("$('saveSettings')"):]:
     s=s.replace("localStorage.setItem('voice',$('voiceSetting').value);","localStorage.setItem('voice',$('voiceSetting').value);localStorage.setItem('navigatorName',$('navigatorName').value.trim());")
     s=s.replace("const u=localStorage.getItem('unit'),v=localStorage.getItem('voice');","const u=localStorage.getItem('unit'),v=localStorage.getItem('voice'),n=localStorage.getItem('navigatorName');")
