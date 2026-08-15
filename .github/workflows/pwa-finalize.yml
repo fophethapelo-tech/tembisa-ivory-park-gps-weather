@@ -1,0 +1,29 @@
+name: Finalize PWA install
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  finalize:
+    if: ${{ !contains(github.event.head_commit.message, '[pwa-finalize]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add PWA metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          if 'rel="manifest"' not in s:
+              s=s.replace('</head>','<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#087fbd"><link rel="apple-touch-icon" href="icon.svg"></head>')
+          if 'navigator.serviceWorker.register' not in s:
+              s=s.replace('</body>','<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script></body>')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'Finalize PWA install metadata [pwa-finalize]'
+          git push
