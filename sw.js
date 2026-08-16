@@ -1,4 +1,4 @@
-const VERSION='tembisa-live-v11';
+const VERSION='tembisa-live-v12';
 self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
 self.addEventListener('fetch',event=>{
@@ -9,7 +9,7 @@ self.addEventListener('fetch',event=>{
     event.respondWith(fetch(new Request(event.request,{cache:'no-store'})).then(async response=>{
       if(!response.ok)return response;
       const html=await response.text();
-      const injection='\n<script src="./nationwide-address-search.js?v=11"></script>\n<script src="./navigation-final-fix.js?v=11"></script>\n<script src="./navigation-enhancements.js?v=11"></script>\n<script src="./free-navigation-engine.js?v=11"></script>\n';
+      const injection='\n<script src="./nationwide-address-search.js?v=12"></script>\n<script src="./navigation-final-fix.js?v=12"></script>\n<script src="./navigation-enhancements.js?v=12"></script>\n<script src="./free-navigation-engine.js?v=12"></script>\n';
       const body=html.includes('</body>')?html.replace('</body>',injection+'</body>'):html+injection;
       return new Response(body,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     }).catch(()=>caches.match(event.request)));
