@@ -1,5 +1,17 @@
-const CACHE='tembisa-nationwide-v9';
-const SHELL=['./','./index.html','./navigation-final-fix.js','./navigation-enhancements.js','./nationwide-address-search.js','./free-navigation-engine.js','./google-maps-config.js','./google-production-navigation.js','./manifest.json','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(u.origin!==location.origin)return;if(u.pathname.endsWith('/')||u.pathname.endsWith('/index.html')){e.respondWith(fetch(e.request,{cache:'no-store'}).then(async r=>{if(!r.ok)return r;const text=await r.text();const injected=text.replace('</body>','<script src="./google-maps-config.js?v=9"></script><script src="./navigation-final-fix.js?v=9"></script><script src="./navigation-enhancements.js?v=9"></script><script src="./nationwide-address-search.js?v=9"></script><script src="./google-production-navigation.js?v=9"></script><script src="./free-navigation-engine.js?v=9"></script></body>');const out=new Response(injected,{status:r.status,statusText:r.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});const c=await caches.open(CACHE);await c.put('./index.html',out.clone());return out}).catch(()=>caches.match('./index.html')));return;}e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy))}return r}).catch(()=>cached)))});
+const VERSION='tembisa-live-v10';
+self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
+self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',event=>{
+  if(event.request.method!=='GET') return;
+  const url=new URL(event.request.url);
+  if(url.origin!==location.origin) return;
+  if(url.pathname.endsWith('/')||url.pathname.endsWith('/index.html')){
+    event.respondWith(fetch(new Request(event.request,{cache:'no-store'})).then(async response=>{
+      if(!response.ok)return response;
+      const html=await response.text();
+      const injection='\n<script src="./nationwide-address-search.js?v=10"></script>\n<script src="./navigation-final-fix.js?v=10"></script>\n<script src="./free-navigation-engine.js?v=10"></script>\n';
+      const body=html.includes('</body>')?html.replace('</body>',injection+'</body>'):html+injection;
+      return new Response(body,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+    }).catch(()=>caches.match(event.request)));
+  }
+});
